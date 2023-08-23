@@ -1,70 +1,80 @@
-// Import necessary dependencies from React library
+// Import React and necessary hooks
 import React, { useState, useEffect } from "react";
-
-// Import the styles defined in "App.css" to be used in the component
+// Import the main CSS file for styling
 import "./App.css";
-
-// Import custom components for different parts of the Hangman game
-// Component to display the hidden word with guessed letters
+// Import the WordDisplay component for showing the word with guessed letters
 import WordDisplay from "./components/WordDisplay";
-// Component for interactive letter buttons
+// Import the LetterButton component for letter selection
 import LetterButton from "./components/LetterButton";
-// Component to display the hangman figure
+// Import the HangmanDisplay component for displaying the hangman graphic
 import HangmanDisplay from "./components/HangmanDisplay";
-// Component to show game status and restart options
+// Import the GameStatus component for displaying game status (win, loss, ongoing)
 import GameStatus from "./components/GameStatus";
-// Component to display guessed letters
+// Import the GuessedLetters component for showing the guessed letters
 import GuessedLetters from "./components/GuessedLetters";
+// Import the HelpModal component for displaying game instructions or hints
+import HelpModal from "./components/HelpModal";
 
-// An array of words that can be used for the game
+// List of words for the game
 const words = ["hangman", "react", "javascript", "programming"];
 
 function App() {
-  // State management for the game
+  // State variables for the game
   const [selectedWord, setSelectedWord] = useState(
-    words[Math.floor(Math.random() * words.length)] // Select a random word from the array
+    words[Math.floor(Math.random() * words.length)]
   );
-  const [guessedLetters, setGuessedLetters] = useState([]); // Array of guessed letters
-  const [incorrectGuesses, setIncorrectGuesses] = useState(0); // Count of incorrect guesses
+  const [guessedLetters, setGuessedLetters] = useState([]);
+  const [incorrectGuesses, setIncorrectGuesses] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
 
-  // Add event listener for key presses (letters) to handle guesses
+  // Function to toggle the visibility of the help modal
+  const toggleHelp = () => {
+    setShowHelp(!showHelp);
+  };
+
+  // Add event listener for keyboard input
   useEffect(() => {
     const handleKeyPress = (event) => {
       const pressedKey = event.key.toLowerCase();
+      // Check if pressed key is a letter and hasn't been guessed before
       if (/^[a-z]$/.test(pressedKey) && !guessedLetters.includes(pressedKey)) {
-        guessLetter(pressedKey); // Call the guessLetter function if a valid key is pressed
+        guessLetter(pressedKey);
       }
     };
     window.addEventListener("keydown", handleKeyPress);
+    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
   });
 
-  // Function to handle guessing a letter
+  // Function to handle a guessed letter
   const guessLetter = (letter) => {
-    setGuessedLetters([...guessedLetters, letter]); // Add the guessed letter to the array
+    setGuessedLetters([...guessedLetters, letter]);
+    // Increment incorrect guesses if the letter is not in the selected word
     if (!selectedWord.includes(letter)) {
-      setIncorrectGuesses(incorrectGuesses + 1); // Increment incorrect guesses if the letter is not in the word
+      setIncorrectGuesses(incorrectGuesses + 1);
     }
   };
 
   // Function to restart the game
   const restartGame = () => {
-    setSelectedWord(words[Math.floor(Math.random() * words.length)]); // Select a new random word
-    setGuessedLetters([]); // Clear guessed letters
-    setIncorrectGuesses(0); // Reset incorrect guesses
+    setSelectedWord(words[Math.floor(Math.random() * words.length)]);
+    setGuessedLetters([]);
+    setIncorrectGuesses(0);
   };
 
-  // The JSX representing the game interface
   return (
     <div className="App">
       <h1>Piero's Hangman Game</h1>
       <h3>Guess the word</h3>
+      <button onClick={toggleHelp}>Help</button>
       <div className="hangman-guessed-container">
+        {/* Display the hangman and guessed letters */}
         <HangmanDisplay incorrectGuesses={incorrectGuesses} />
         <GuessedLetters guessedLetters={guessedLetters} />
       </div>
+      {/* Display the word with guessed letters */}
       <WordDisplay word={selectedWord} guessedLetters={guessedLetters} />
       <div className="letter-buttons">
         {/* Create buttons for each letter */}
@@ -77,13 +87,15 @@ function App() {
           />
         ))}
       </div>
-      {/* Display game status and options to restart */}
+      {/* Display the game status and restart button */}
       <GameStatus
         selectedWord={selectedWord}
         guessedLetters={guessedLetters}
         incorrectGuesses={incorrectGuesses}
         restartGame={restartGame}
       />
+      {/* Display the HelpModal when showHelp is true */}
+      <HelpModal show={showHelp} onClose={toggleHelp} />
     </div>
   );
 }
