@@ -1,4 +1,28 @@
-# Getting Started with Create React App
+# Hangman Game in React
+
+Welcome to the Hangman Game in React! This project allows you to play the classic Hangman word guessing game right in your browser.
+
+## Game Rules
+
+The Hangman Game is a word guessing game. The goal is to guess the hidden word letter by letter before the hangman figure is fully drawn. You have a limited number of incorrect guesses before the hangman is complete.
+
+    Guess the hidden word by selecting letters.
+    Incorrect guesses add to the hangman figure.
+    Guess the word before hangman completes to win!
+    You have a limited number of attempts to guess the word
+    Each incorrect guess brings you closer to losing.
+    Pay attention to the letters you've used to avoid repeating them.
+    If the hangman figure is complete before you guess the word, you lose.
+
+## Getting Started
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). To get started, follow these steps:
+
+1. **Clone the repository**:
+   ```sh
+   git clone https://github.com/your-username/hangman-react.git
+   cd hangman-react
+   ```
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
